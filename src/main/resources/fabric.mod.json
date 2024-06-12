@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "powerchord",
+  "version": "${version}",
+  "name": "PowerChord",
+  "description": "A component-driven RPG instrument system for hunting-horn-likes.",
+  "authors": [
+    "Garden system",
+    "Sisby folk"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/powerchord",
+    "issues": "https://github.com/hestimae/powerchord/issues",
+    "sources": "https://github.com/hestimae/powerchord"
+  },
+  "icon": "assets/powerchord/icon.png",
+  "license": "LGPL-3.0-only",
+  "entrypoints": {
+    "main": [
+      "garden.hestia.powerchord.PowerChord"
+    ]
+  },
+  "depends": {
+    "minecraft": ">=1.21-",
+    "fabricloader": ">=${fl}",
+    "fabric-api": ">=${fapi}"
+  },
+  "mixins": [
+    "powerchord.mixins.json"
+  ]
+}
