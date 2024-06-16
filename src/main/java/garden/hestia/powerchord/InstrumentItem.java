@@ -47,6 +47,15 @@ public class InstrumentItem extends Item {
     }
 
     @Override
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        if (user instanceof PlayerEntity player) {
+            user.playSound(SoundEvents.BLOCK_CANDLE_EXTINGUISH, 0.5f, 1.0f);
+            player.getItemCooldownManager().set(stack.getItem(), 20);
+        }
+        return super.finishUsing(stack, world, user);
+    }
+
+    @Override
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.BOW;
     }
