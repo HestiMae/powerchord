@@ -41,13 +41,38 @@ public class InstrumentItem extends Item {
         return component == null ? List.of() : List.copyOf(component.chords());
     }
 
+    public static int getChordIndex(LivingEntity user, ItemStack keyStack) {
+        return 0;
+    }
+
+    public static boolean playRoot(LivingEntity user, ItemStack keyStack, int chordIndex) {
+        if (hasKey(keyStack)) {
+            user.playSound(getSoundEvent(keyStack), 1.0f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).root()));
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean playChord(LivingEntity user, ItemStack keyStack, int chordIndex) {
+        if (hasKey(keyStack)) {
+            user.playSound(getSoundEvent(keyStack), 0.5f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).root()));
+            user.playSound(getSoundEvent(keyStack), 0.3f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).third()));
+            user.playSound(getSoundEvent(keyStack), 0.7f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).fifth()));
+            return true;
+        }
+        return false;
+    }
+
+    public boolean swing(PlayerEntity user, Hand hand) {
+        ItemStack keyStack = getKeyStack(user, user.getStackInHand(hand));
+        return playChord(user, keyStack, getChordIndex(user, keyStack));
+    }
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack keyStack = getKeyStack(user, user.getStackInHand(hand));
-        if (hasKey(keyStack)) {
+        if (playRoot(user, keyStack, getChordIndex(user, keyStack))) {
             user.setCurrentHand(hand);
-            int chordIndex = 0;
-            user.playSound(getSoundEvent(keyStack), 1.0f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).root()));
             return TypedActionResult.pass(user.getStackInHand(hand));
         }
         return super.use(world, user, hand);
@@ -57,12 +82,10 @@ public class InstrumentItem extends Item {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (remainingUseTicks == 50) {
             ItemStack keyStack = getKeyStack(user, stack);
-            int chordIndex = 0;
-            user.playSound(getSoundEvent(keyStack), 1.0f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).third()));
+            user.playSound(getSoundEvent(keyStack), 1.0f, NoteBlock.getNotePitch(getChords(keyStack).get(getChordIndex(user, keyStack)).third()));
         } else if (remainingUseTicks == 40) {
             ItemStack keyStack = getKeyStack(user, stack);
-            int chordIndex = 0;
-            user.playSound(getSoundEvent(keyStack), 1.0f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).fifth()));
+            user.playSound(getSoundEvent(keyStack), 1.0f, NoteBlock.getNotePitch(getChords(keyStack).get(getChordIndex(user, keyStack)).fifth()));
         }
         super.usageTick(world, user, stack, remainingUseTicks);
     }
@@ -71,11 +94,7 @@ public class InstrumentItem extends Item {
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (remainingUseTicks < 40) {
             ItemStack keyStack = getKeyStack(user, stack);
-            int chordIndex = 0;
-            user.playSound(getSoundEvent(keyStack), 0.5f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).root()));
-            user.playSound(getSoundEvent(keyStack), 0.3f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).third()));
-            user.playSound(getSoundEvent(keyStack), 0.7f, NoteBlock.getNotePitch(getChords(keyStack).get(chordIndex).fifth()));
-            if (user instanceof PlayerEntity player) {
+            if (playChord(user, keyStack, getChordIndex(user, keyStack)) && user instanceof PlayerEntity player) {
                 player.getItemCooldownManager().set(stack.getItem(), 60);
             }
         }
