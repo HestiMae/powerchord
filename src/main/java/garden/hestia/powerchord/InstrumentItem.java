@@ -42,7 +42,8 @@ public class InstrumentItem extends Item {
     }
 
     public static int getChordIndex(LivingEntity user, ItemStack keyStack) {
-        return 0;
+        PowerKeyComponent component = keyStack.getComponents().getOrDefault(PowerChord.KEY, null);
+        return component == null ? 0 : (int) Math.floor((user.getPitch() + 90.0f) * component.chords().size() / 180.05f);
     }
 
     public static boolean playRoot(LivingEntity user, ItemStack keyStack, int chordIndex) {
