@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "garden.hestia.powerchord.PowerChord"
+    ],
+    "client": [
+      "garden.hestia.powerchord.client.PowerChordClient"
     ]
   },
   "depends": {
