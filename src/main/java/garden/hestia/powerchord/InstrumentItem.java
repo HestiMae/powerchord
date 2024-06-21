@@ -50,7 +50,7 @@ public class InstrumentItem extends Item {
     }
 
     public static int getChordIndex(LivingEntity user, PowerKeyComponent key) {
-        return key == null ? 0 : (int) Math.floor((user.getPitch() + 90.0f) * key.chords().size() / 180.05f);
+        return key == null ? 0 : (int) Math.floor((90.0f - user.getPitch()) * key.chords().size() / 180.05f);
     }
 
     public static void playRoot(LivingEntity user, PowerKeyComponent key, int chordIndex) {

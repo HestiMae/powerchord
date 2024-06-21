@@ -7,6 +7,7 @@
     "MixinLivingEntity"
   ],
   "client": [
+    "client.MixinGameRenderer",
     "client.MixinItemRenderer"
   ],
   "injectors": {
