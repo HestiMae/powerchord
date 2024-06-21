@@ -3,16 +3,21 @@ package garden.hestia.powerchord.client;
 import garden.hestia.powerchord.InstrumentItem;
 import garden.hestia.powerchord.PowerKeyComponent;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 public class PowerChordClient implements ClientModInitializer {
+    public static final Identifier HARMONICA_FLAT = Identifier.of("powerchord", "item/harmonica_flat");
+
     @Override
     public void onInitializeClient() {
+        ModelLoadingPlugin.register(pluginContext -> pluginContext.addModels(HARMONICA_FLAT));
         HudRenderCallback.EVENT.register(PowerChordClient::render);
     }
 
