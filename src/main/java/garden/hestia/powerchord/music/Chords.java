@@ -41,8 +41,8 @@ public class Chords {
     public static final PowerTriad Gm = new PowerTriad(Notes.G, Notes.As, Notes.D, Text.literal("Gm"), new AoeEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 40), 10, false));
     public static final PowerTriad Gsm = new PowerTriad(Notes.Gs, Notes.B, Notes.Ds, Text.literal("G#m"), new AoeEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 1), 10, false));
     public static final PowerTriad Am = new PowerTriad(Notes.A, Notes.C, Notes.E, Text.literal("Am"), new AoeEffect(new StatusEffectInstance(StatusEffects.UNLUCK, 40), 10, false));
-    public static final PowerTriad Asm = new PowerTriad(Notes.As, Notes.D, Notes.F, Text.literal("A#"), new AoeEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 60), 10, false));
-    public static final PowerTriad Bm = new PowerTriad(Notes.B, Notes.D, Notes.Fs2, Text.literal("B"), new AoeEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40), 10, false));
+    public static final PowerTriad Asm = new PowerTriad(Notes.As, Notes.D, Notes.F, Text.literal("A#m"), new AoeEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 60), 10, false));
+    public static final PowerTriad Bm = new PowerTriad(Notes.B, Notes.D, Notes.Fs2, Text.literal("Bm"), new AoeEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40), 10, false));
     public static final PowerTriad Cm = new PowerTriad(Notes.C, Notes.Ds, Notes.G2, Text.literal("Cm"), new AoeEffect(new StatusEffectInstance(StatusEffects.POISON, 40), 10, false));
     public static final PowerTriad Csm = new PowerTriad(Notes.Cs, Notes.E, Notes.Gs2, Text.literal("C#m"), new AoeEffect(new StatusEffectInstance(StatusEffects.WITHER, 20), 10, false));
     public static final PowerTriad Dm = new PowerTriad(Notes.D, Notes.F2, Notes.A2, Text.literal("Dm"), new AoeEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 80), 10, false));
