@@ -48,7 +48,7 @@ public class PowerChord implements ModInitializer {
     );
 
     public static final Item SPIRIT_CHAMELEON = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_chameleon"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), Progressions.Cm1546)))
+        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_GUITAR.value(), Progressions.Cm1546)))
     );
 
     @Override
