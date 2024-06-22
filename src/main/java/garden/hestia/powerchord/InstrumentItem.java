@@ -113,7 +113,7 @@ public class InstrumentItem extends Item {
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (remainingUseTicks < 40) {
             PowerKeyComponent key = getKey(user, stack);
-            if (key != null && user instanceof PlayerEntity player && hasKey(user.getStackInHand(user.getStackInHand(Hand.MAIN_HAND) == stack ? Hand.OFF_HAND : Hand.MAIN_HAND)) /* Only do effects with magic spirits */) {
+            if (key != null && user instanceof PlayerEntity player && InstrumentItem.isMagical(user)) {
                 playChord(user, key, getChordIndex(user, key));
                 AoeEffect effect = key.chords().get(getChordIndex(user, key)).effect();
                 List<LivingEntity> targets;
@@ -130,6 +130,10 @@ public class InstrumentItem extends Item {
             }
         }
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
+    }
+
+    public static boolean isMagical(LivingEntity user) {
+        return !((user.getStackInHand(Hand.MAIN_HAND).getItem() instanceof InstrumentItem) || !(user.getStackInHand(Hand.OFF_HAND).getItem() instanceof InstrumentItem)) && hasKey(user.getStackInHand(Hand.MAIN_HAND)) && hasKey(user.getStackInHand(Hand.OFF_HAND));
     }
 
     @Override
