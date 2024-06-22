@@ -2,6 +2,7 @@ package garden.hestia.powerchord;
 
 import net.minecraft.block.NoteBlock;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,8 +11,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InstrumentItem extends Item {
@@ -99,6 +102,22 @@ public class InstrumentItem extends Item {
             PowerKeyComponent key = getKey(user, stack);
             if (key != null && user instanceof PlayerEntity player) {
                 playChord(user, key, getChordIndex(user, key));
+                AoeEffect effect = key.chords().get(getChordIndex(user, key)).effect();
+                List<LivingEntity> targets;
+                if (effect.friendly())
+                {
+                     targets = new ArrayList<>(world.getNonSpectatingEntities(PlayerEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
+
+                }
+                else
+                {
+                    targets = new ArrayList<>(world.getNonSpectatingEntities(HostileEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
+                }
+
+                for (LivingEntity target : targets)
+                {
+                    target.addStatusEffect(effect.status());
+                }
                 player.getItemCooldownManager().set(stack.getItem(), 60);
             }
         }

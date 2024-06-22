@@ -9,6 +9,7 @@ public interface PowerableChord extends Comparable<PowerableChord> {
     Collection<Integer> notes();
     int root();
     Text name();
+    AoeEffect effect();
 
     @Override
     default int compareTo(@NotNull PowerableChord o) {
