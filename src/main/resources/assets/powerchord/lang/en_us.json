@@ -6,6 +6,16 @@
   "item.powerchord.spirit_bunny": "B Valley Spirit (Bunny)",
   "item.powerchord.spirit_bat": "Bb Aero Valley Spirit (Bat)",
   "item.powerchord.spirit_cat": "C Valley Spirit (Cat)",
+  "item.powerchord.spirit_dog": "D Valley Spirit (Dog)",
+  "item.powerchord.spirit_echidna": "E Valley Spirit (Echidna)",
+  "item.powerchord.spirit_frog": "F Valley Spirit (Frog)",
+  "item.powerchord.spirit_gopher": "G Valley Spirit (Gopher)",
+
+  "item.powerchord.spirit_anteater": "Am Valley Spirit (Anteater)",
+  "item.powerchord.spirit_butterfly": "Bm Valley Spirit (Butterfly)",
   "item.powerchord.spirit_chameleon": "Cm Valley Spirit (Chameleon)",
-  "item.powerchord.spirit_dog": "D Valley Spirit (Dog)"
+  "item.powerchord.spirit_deer": "Dm Valley Spirit (Deer)",
+  "item.powerchord.spirit_emu": "Em Valley Spirit (Emu)",
+  "item.powerchord.spirit_flamingo": "Fm Valley Spirit (Flamingo)",
+  "item.powerchord.spirit_grasshopper": "Gm Valley Spirit (Grasshopper)"
 }
