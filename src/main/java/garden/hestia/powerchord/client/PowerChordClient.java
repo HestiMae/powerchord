@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -25,8 +26,9 @@ public class PowerChordClient implements ClientModInitializer {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return;
         PowerKeyComponent key = InstrumentItem.getPlayableKey(player);
-        if (key == null) return;
-        Text chordName = key.chords().get(InstrumentItem.getChordIndex(player, key)).name();
+        ItemStack instrumentItemStack = InstrumentItem.getPlayableInstrument(player);
+        if (key == null || instrumentItemStack == null) return;
+        Text chordName = key.chords().get(InstrumentItem.getChordIndex(player, key, instrumentItemStack)).name();
         drawContext.drawText(MinecraftClient.getInstance().textRenderer, chordName, drawContext.getScaledWindowWidth() / 2 + 8, drawContext.getScaledWindowHeight() / 2 - 4, 0xffffffff, true);
     }
 

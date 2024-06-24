@@ -25,6 +25,8 @@ public class PowerChord implements ModInitializer {
     public static final ComponentType<AoeEffect> AOE_EFFECT = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(ID, "effect"),
         ComponentType.<AoeEffect>builder().codec(AoeEffect.CODEC).packetCodec(AoeEffect.PACKET_CODEC).build()
     );
+    public static final ComponentType<InstrumentStateComponent> STATE = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(ID, "state"),
+        ComponentType.<InstrumentStateComponent>builder().packetCodec(InstrumentStateComponent.PACKET_CODEC).build());
 
     public static final InstrumentItem HARMONICA = Registry.register(Registries.ITEM, Identifier.of(ID, "harmonica"), new InstrumentItem(new Item.Settings().maxCount(1).component(KEY,
         new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), List.of(
