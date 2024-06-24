@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinGameRenderer {
     @Inject(method = "findCrosshairTarget", at = @At("HEAD"), cancellable = true)
     private void instrumentNoTarget(Entity camera, double blockInteractionRange, double entityInteractionRange, float tickDelta, CallbackInfoReturnable<HitResult> cir) {
-        if (MinecraftClient.getInstance().player != null && MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof InstrumentItem) {
+        if (MinecraftClient.getInstance().player != null && InstrumentItem.handBlockingSwing(MinecraftClient.getInstance().player, Hand.MAIN_HAND) != null) {
             cir.setReturnValue(BlockHitResult.createMissed(MinecraftClient.getInstance().player.getPos(), Direction.EAST, MinecraftClient.getInstance().player.getBlockPos()));
             cir.cancel();
         }

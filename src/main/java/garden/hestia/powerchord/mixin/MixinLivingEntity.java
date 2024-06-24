@@ -19,9 +19,10 @@ public abstract class MixinLivingEntity {
     @Inject(method = "swingHand(Lnet/minecraft/util/Hand;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getWorld()Lnet/minecraft/world/World;", ordinal = 0))
     public void swingHand(Hand hand, boolean fromServerPlayer, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
-        if (self instanceof PlayerEntity player && player.getStackInHand(hand).getItem() instanceof InstrumentItem instrument && player.getAttackCooldownProgress(0.0f) == 0.0f) {
-            instrument.swing(player, hand);
-            self.handSwingTicks = getHandSwingDuration();
+        if (self instanceof PlayerEntity player && player.getAttackCooldownProgress(0.0f) == 0.0f) {
+            if (InstrumentItem.swing(player, hand)) {
+                self.handSwingTicks = getHandSwingDuration();
+            }
         }
     }
 }

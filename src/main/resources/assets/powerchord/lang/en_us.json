@@ -1,4 +1,10 @@
 {
   "item.powerchord.harmonica": "Harmonica",
-  "item.powerchord.spirit_bunny": "Valley Spirit (Bunny)"
+
+  "item.powerchord.spirit_armadillo": "A Valley Spirit (Armadillo)",
+  "item.powerchord.spirit_bunny": "B Valley Spirit (Bunny)",
+  "item.powerchord.spirit_bat": "Bb Aero Valley Spirit (Bat)",
+  "item.powerchord.spirit_cat": "C Valley Spirit (Cat)",
+  "item.powerchord.spirit_chameleon": "Cm Valley Spirit (Chameleon)",
+  "item.powerchord.spirit_dog": "D Valley Spirit (Dog)"
 }

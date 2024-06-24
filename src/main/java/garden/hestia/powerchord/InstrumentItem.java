@@ -2,6 +2,7 @@ package garden.hestia.powerchord;
 
 import net.minecraft.block.NoteBlock;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -22,8 +23,7 @@ public class InstrumentItem extends Item {
         super(settings);
     }
 
-    public static PowerKeyComponent getPlayableKey(PlayerEntity player)
-    {
+    public static PowerKeyComponent getPlayableKey(PlayerEntity player) {
         ItemStack instrumentStack = getPlayableInstrument(player);
         if (instrumentStack != null && instrumentStack.getItem() instanceof InstrumentItem) return getKey(player, instrumentStack);
         return null;
@@ -65,7 +65,7 @@ public class InstrumentItem extends Item {
         stack.set(PowerChord.STATE, new InstrumentStateComponent(index));
     }
 
-    public static SoundEvent getSoundEvent(PowerKeyComponent key) {   
+    public static SoundEvent getSoundEvent(PowerKeyComponent key) {
         return key == null ? SoundEvents.INTENTIONALLY_EMPTY : key.sound();
     }
 
@@ -75,7 +75,7 @@ public class InstrumentItem extends Item {
     }
 
     public static void playRoot(LivingEntity user, PowerKeyComponent key, int chordIndex) {
-        user.playSound(getSoundEvent(key), 1.0f, NoteBlock.getNotePitch(key.chords().get(chordIndex).root()));
+        user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(chordIndex).root()));
     }
 
     public static void playChord(LivingEntity user, PowerKeyComponent key, int chordIndex) {
@@ -84,9 +84,23 @@ public class InstrumentItem extends Item {
         user.playSound(getSoundEvent(key), 0.7f, NoteBlock.getNotePitch(key.chords().get(chordIndex).fifth()));
     }
 
-    public void swing(PlayerEntity user, Hand hand) {
-        PowerKeyComponent key = getKey(user, user.getStackInHand(hand));
-        playChord(user, key, getChordIndex(user, key, user.getStackInHand(hand)));
+    public static Hand handBlockingSwing(PlayerEntity player, Hand hand) {
+        if (player.getStackInHand(hand).getItem() instanceof InstrumentItem) {
+            return hand;
+        } else if (InstrumentItem.hasKey(player.getStackInHand(hand)) && player.getStackInHand(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND).getItem() instanceof InstrumentItem) {
+            return hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
+        }
+        return null;
+    }
+
+    public static boolean swing(PlayerEntity user, Hand hand) {
+        Hand swingHand = handBlockingSwing(user, hand);
+        if (swingHand !=  null) {
+            PowerKeyComponent key = getKey(user, user.getStackInHand(hand));
+            playChord(user, key, getChordIndex(user, key, user.getStackInHand(hand)));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -105,12 +119,11 @@ public class InstrumentItem extends Item {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         PowerKeyComponent key = getKey(user, stack);
-        if (key != null)
-        {
+        if (key != null) {
             if (remainingUseTicks == 50) {
-                user.playSound(getSoundEvent(key), 1.0f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).third()));
+                user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).third()));
             } else if (remainingUseTicks == 40) {
-                user.playSound(getSoundEvent(key), 1.0f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).fifth()));
+                user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).fifth()));
             }
         }
         super.usageTick(world, user, stack, remainingUseTicks);
@@ -120,29 +133,28 @@ public class InstrumentItem extends Item {
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (remainingUseTicks < 40) {
             PowerKeyComponent key = getKey(user, stack);
-            if (key != null && user instanceof PlayerEntity player) {
+            if (key != null && user instanceof PlayerEntity player && InstrumentItem.isMagical(user)) {
                 playChord(user, key, getChordIndex(user, key, stack));
                 AoeEffect effect = key.chords().get(getChordIndex(user, key, stack)).effect();
                 List<LivingEntity> targets;
-                if (effect.friendly())
-                {
-                     targets = new ArrayList<>(world.getNonSpectatingEntities(PlayerEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
-
-                }
-                else
-                {
+                if (effect.friendly()) {
+                    targets = new ArrayList<>(world.getNonSpectatingEntities(PlayerEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
+                } else {
                     targets = new ArrayList<>(world.getNonSpectatingEntities(HostileEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
                 }
 
-                for (LivingEntity target : targets)
-                {
-                    target.addStatusEffect(effect.status());
+                for (LivingEntity target : targets) {
+                    target.addStatusEffect(new StatusEffectInstance(effect.status()));
                 }
                 player.getItemCooldownManager().set(stack.getItem(), 60);
             }
         }
         stack.remove(PowerChord.STATE);
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
+    }
+
+    public static boolean isMagical(LivingEntity user) {
+        return !((user.getStackInHand(Hand.MAIN_HAND).getItem() instanceof InstrumentItem) || !(user.getStackInHand(Hand.OFF_HAND).getItem() instanceof InstrumentItem)) && hasKey(user.getStackInHand(Hand.MAIN_HAND)) && hasKey(user.getStackInHand(Hand.OFF_HAND));
     }
 
     @Override
