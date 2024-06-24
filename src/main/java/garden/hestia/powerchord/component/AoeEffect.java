@@ -1,4 +1,4 @@
-package garden.hestia.powerchord;
+package garden.hestia.powerchord.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

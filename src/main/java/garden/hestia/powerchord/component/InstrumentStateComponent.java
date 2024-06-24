@@ -1,4 +1,4 @@
-package garden.hestia.powerchord;
+package garden.hestia.powerchord.component;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.PacketCodec;

@@ -1,0 +1,56 @@
+{
+  "textures": {
+    "0": "powerchord:item/pan_flute_held",
+    "particle": "powerchord:item/pan_flute_held"
+  },
+  "elements": [
+    {
+      "from": [5, 4, 7],
+      "to": [11, 9, 8],
+      "rotation": {"angle": 0, "axis": "y", "origin": [11, 4, 7]},
+      "faces": {
+        "north": {"uv": [1, 1, 7, 6], "texture": "#0"},
+        "east": {"uv": [0, 1, 1, 6], "texture": "#0"},
+        "south": {"uv": [8, 1, 14, 6], "texture": "#0"},
+        "west": {"uv": [7, 1, 8, 6], "texture": "#0"},
+        "up": {"uv": [7, 1, 1, 0], "texture": "#0"},
+        "down": {"uv": [13, 0, 7, 1], "texture": "#0"}
+      }
+    },
+    {
+      "from": [8, 3, 7],
+      "to": [11, 4, 8],
+      "rotation": {"angle": 0, "axis": "y", "origin": [8, 3, 7]},
+      "faces": {
+        "north": {"uv": [1, 6, 4, 7], "texture": "#0"},
+        "east": {"uv": [0, 6, 1, 7], "texture": "#0"},
+        "south": {"uv": [11, 6, 14, 7], "texture": "#0"},
+        "west": {"uv": [7, 6, 8, 7], "texture": "#0"},
+        "down": {"uv": [10, 0, 7, 1], "texture": "#0"}
+      }
+    }
+  ],
+  "gui_light": "front",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [40, 0, 0],
+      "translation": [-3, 0, 0]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [40, 0, 0],
+      "translation": [-3, 0, 0]
+    },
+    "firstperson_righthand": {
+      "rotation": [50, -9, 13],
+      "translation": [0, 0.5, 0]
+    },
+    "firstperson_lefthand": {
+      "rotation": [50, -40, 26],
+      "translation": [0, 0.5, 0]
+    },
+    "gui": {
+      "rotation": [35, 38, 0],
+      "translation": [1, -0.5, 0]
+    }
+  }
+}

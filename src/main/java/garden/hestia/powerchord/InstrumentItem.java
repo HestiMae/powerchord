@@ -1,5 +1,8 @@
 package garden.hestia.powerchord;
 
+import garden.hestia.powerchord.component.AoeEffect;
+import garden.hestia.powerchord.component.InstrumentStateComponent;
+import garden.hestia.powerchord.component.KeyComponent;
 import net.minecraft.block.NoteBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -23,7 +26,7 @@ public class InstrumentItem extends Item {
         super(settings);
     }
 
-    public static PowerKeyComponent getPlayableKey(PlayerEntity player) {
+    public static KeyComponent getPlayableKey(PlayerEntity player) {
         ItemStack instrumentStack = getPlayableInstrument(player);
         if (instrumentStack != null && instrumentStack.getItem() instanceof InstrumentItem) return getKey(player, instrumentStack);
         return null;
@@ -39,25 +42,33 @@ public class InstrumentItem extends Item {
     }
 
     public static boolean hasKey(ItemStack stack) {
-        return stack.getComponents().contains(PowerChord.KEY);
+        return stack.contains(PowerChord.KEY);
     }
 
-    public static PowerKeyComponent getKey(LivingEntity user, ItemStack usingStack) {
+    public static KeyComponent getKey(LivingEntity user, ItemStack usingStack) {
         if (user instanceof PlayerEntity player) {
             ItemStack otherStack = player.getStackInHand(Hand.MAIN_HAND) == usingStack ? player.getStackInHand(Hand.OFF_HAND) : player.getStackInHand(Hand.MAIN_HAND);
-            if (hasKey(otherStack) && !(otherStack.getItem() instanceof InstrumentItem)) return otherStack.getComponents().get(PowerChord.KEY);
+            if (hasKey(otherStack) && !(otherStack.getItem() instanceof InstrumentItem)) return otherStack.get(PowerChord.KEY);
         }
-        return hasKey(usingStack) ? usingStack.getComponents().get(PowerChord.KEY) : null;
+        return hasKey(usingStack) ? usingStack.get(PowerChord.KEY) : null;
+    }
+
+    private int getNotePlayTicks(ItemStack stack) {
+        return stack.contains(PowerChord.INSTRUMENT) ? stack.get(PowerChord.INSTRUMENT).notePlayTicks() : 10;
+    }
+
+    private int getNoteCooldownTicks(ItemStack stack) {
+        return stack.contains(PowerChord.INSTRUMENT) ? stack.get(PowerChord.INSTRUMENT).noteCooldownTicks() : 20;
     }
 
     public static boolean hasState(ItemStack stack)
     {
-        return stack.getComponents().contains(PowerChord.STATE);
+        return stack.contains(PowerChord.STATE);
     }
 
     public static InstrumentStateComponent getState(ItemStack stack)
     {
-        return hasState(stack) ? stack.getComponents().get(PowerChord.STATE) : null;
+        return hasState(stack) ? stack.get(PowerChord.STATE) : null;
     }
 
     public static void setState(ItemStack stack, int index)
@@ -65,23 +76,24 @@ public class InstrumentItem extends Item {
         stack.set(PowerChord.STATE, new InstrumentStateComponent(index));
     }
 
-    public static SoundEvent getSoundEvent(PowerKeyComponent key) {
+    public static SoundEvent getSoundEvent(KeyComponent key) {
         return key == null ? SoundEvents.INTENTIONALLY_EMPTY : key.sound();
     }
 
-    public static int getChordIndex(LivingEntity user, PowerKeyComponent key, ItemStack instrumentStack) {
+    public static int getChordIndex(LivingEntity user, KeyComponent key, ItemStack instrumentStack) {
         if (hasState(instrumentStack)) return getState(instrumentStack).chordIndex();
         return key == null ? 0 : (int) Math.floor((90.0f - user.getPitch()) * key.chords().size() / 180.05f);
     }
 
-    public static void playRoot(LivingEntity user, PowerKeyComponent key, int chordIndex) {
+    public static void playRoot(LivingEntity user, KeyComponent key, int chordIndex) {
         user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(chordIndex).root()));
     }
 
-    public static void playChord(LivingEntity user, PowerKeyComponent key, int chordIndex) {
-        user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(chordIndex).root()));
-        user.playSound(getSoundEvent(key), 0.3f, NoteBlock.getNotePitch(key.chords().get(chordIndex).third()));
-        user.playSound(getSoundEvent(key), 0.7f, NoteBlock.getNotePitch(key.chords().get(chordIndex).fifth()));
+    public static void playChord(LivingEntity user, KeyComponent key, int chordIndex) {
+        List<Integer> notes = key.chords().get(chordIndex).notes();
+        for (int i = 0; i < notes.size(); i++) {
+            user.playSound(getSoundEvent(key), i == 0 ? 0.5f : i == notes.size() - 1 ? 0.7f : 0.3f, NoteBlock.getNotePitch(key.chords().get(chordIndex).notes().get(i)));
+        }
     }
 
     public static Hand handBlockingSwing(PlayerEntity player, Hand hand) {
@@ -96,7 +108,7 @@ public class InstrumentItem extends Item {
     public static boolean swing(PlayerEntity user, Hand hand) {
         Hand swingHand = handBlockingSwing(user, hand);
         if (swingHand !=  null) {
-            PowerKeyComponent key = getKey(user, user.getStackInHand(hand));
+            KeyComponent key = getKey(user, user.getStackInHand(hand));
             playChord(user, key, getChordIndex(user, key, user.getStackInHand(hand)));
             return true;
         }
@@ -106,7 +118,7 @@ public class InstrumentItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stackInHand = user.getStackInHand(hand);
-        PowerKeyComponent key = getKey(user, stackInHand);
+        KeyComponent key = getKey(user, stackInHand);
         if (key != null) {
             setState(stackInHand, getChordIndex(user, key, stackInHand));
             playRoot(user, key, getChordIndex(user, key, stackInHand));
@@ -118,12 +130,14 @@ public class InstrumentItem extends Item {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        PowerKeyComponent key = getKey(user, stack);
+        KeyComponent key = getKey(user, stack);
+        int noteTicks = getNotePlayTicks(stack);
         if (key != null) {
-            if (remainingUseTicks == 50) {
-                user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).third()));
-            } else if (remainingUseTicks == 40) {
-                user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).fifth()));
+            if (remainingUseTicks >= 2 * noteTicks) { // Release Zone
+                if (remainingUseTicks % noteTicks == 0) {
+                    int noteIndex = (getMaxUseTime(stack, user) - remainingUseTicks) / noteTicks;
+                    user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).notes().get(noteIndex)));
+                }
             }
         }
         super.usageTick(world, user, stack, remainingUseTicks);
@@ -131,22 +145,24 @@ public class InstrumentItem extends Item {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (remainingUseTicks < 40) {
-            PowerKeyComponent key = getKey(user, stack);
-            if (key != null && user instanceof PlayerEntity player && InstrumentItem.isMagical(user)) {
+        if (remainingUseTicks < getNotePlayTicks(stack) * 2) {
+            KeyComponent key = getKey(user, stack);
+            if (key != null && user instanceof PlayerEntity player) {
                 playChord(user, key, getChordIndex(user, key, stack));
-                AoeEffect effect = key.chords().get(getChordIndex(user, key, stack)).effect();
-                List<LivingEntity> targets;
-                if (effect.friendly()) {
-                    targets = new ArrayList<>(world.getNonSpectatingEntities(PlayerEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
-                } else {
-                    targets = new ArrayList<>(world.getNonSpectatingEntities(HostileEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
-                }
+                if (isMagical(user)) {
+                    AoeEffect effect = key.chords().get(getChordIndex(user, key, stack)).effect();
+                    List<LivingEntity> targets;
+                    if (effect.friendly()) {
+                        targets = new ArrayList<>(world.getNonSpectatingEntities(PlayerEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
+                    } else {
+                        targets = new ArrayList<>(world.getNonSpectatingEntities(HostileEntity.class, Box.of(user.getPos(), effect.radius(), effect.radius(), effect.radius())));
+                    }
 
-                for (LivingEntity target : targets) {
-                    target.addStatusEffect(new StatusEffectInstance(effect.status()));
+                    for (LivingEntity target : targets) {
+                        target.addStatusEffect(new StatusEffectInstance(effect.status()));
+                    }
+                    player.getItemCooldownManager().set(stack.getItem(), key.chords().get(getChordIndex(user, key, stack)).notes().size() * getNoteCooldownTicks(stack));
                 }
-                player.getItemCooldownManager().set(stack.getItem(), 60);
             }
         }
         stack.remove(PowerChord.STATE);
@@ -154,7 +170,7 @@ public class InstrumentItem extends Item {
     }
 
     public static boolean isMagical(LivingEntity user) {
-        return !((user.getStackInHand(Hand.MAIN_HAND).getItem() instanceof InstrumentItem) || !(user.getStackInHand(Hand.OFF_HAND).getItem() instanceof InstrumentItem)) && hasKey(user.getStackInHand(Hand.MAIN_HAND)) && hasKey(user.getStackInHand(Hand.OFF_HAND));
+        return (!(user.getStackInHand(Hand.MAIN_HAND).getItem() instanceof InstrumentItem) || !(user.getStackInHand(Hand.OFF_HAND).getItem() instanceof InstrumentItem)) && hasKey(user.getStackInHand(Hand.MAIN_HAND)) && hasKey(user.getStackInHand(Hand.OFF_HAND));
     }
 
     @Override
@@ -174,6 +190,10 @@ public class InstrumentItem extends Item {
 
     @Override
     public int getMaxUseTime(ItemStack stack, LivingEntity user) {
-        return 60;
+        KeyComponent key = getKey(user, stack);
+        if (key != null) {
+            return (key.chords().get(getChordIndex(user, key, stack)).notes().size() + 1 /* release window */) * getNotePlayTicks(stack);
+        }
+        return 0;
     }
 }

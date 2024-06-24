@@ -1,5 +1,8 @@
 package garden.hestia.powerchord;
 
+import garden.hestia.powerchord.component.InstrumentComponent;
+import garden.hestia.powerchord.component.InstrumentStateComponent;
+import garden.hestia.powerchord.component.KeyComponent;
 import garden.hestia.powerchord.music.Progressions;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.component.ComponentType;
@@ -16,41 +19,49 @@ public class PowerChord implements ModInitializer {
     public static final String ID = "powerchord";
     public static final Logger LOGGER = LoggerFactory.getLogger(ID);
 
-    public static final ComponentType<PowerKeyComponent> KEY = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(ID, "key"),
-        ComponentType.<PowerKeyComponent>builder().codec(PowerKeyComponent.CODEC).packetCodec(PowerKeyComponent.PACKET_CODEC).build()
+    public static final ComponentType<KeyComponent> KEY = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(ID, "key"),
+        ComponentType.<KeyComponent>builder().codec(KeyComponent.CODEC).build()
     );
-    public static final ComponentType<AoeEffect> AOE_EFFECT = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(ID, "effect"),
-        ComponentType.<AoeEffect>builder().codec(AoeEffect.CODEC).packetCodec(AoeEffect.PACKET_CODEC).build()
+
+    public static final ComponentType<InstrumentComponent> INSTRUMENT = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(ID, "instrument"),
+        ComponentType.<InstrumentComponent>builder().codec(InstrumentComponent.CODEC).build()
     );
+
     public static final ComponentType<InstrumentStateComponent> STATE = Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(ID, "state"),
         ComponentType.<InstrumentStateComponent>builder().packetCodec(InstrumentStateComponent.PACKET_CODEC).build());
 
+    public static final InstrumentItem PAN_FLUTE = Registry.register(Registries.ITEM, Identifier.of(ID, "pan_flute"), new InstrumentItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)
+        .component(KEY, new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), Progressions.CHROMATIC))
+        .component(INSTRUMENT, new InstrumentComponent(10, 20))
+    ));
+
     public static final InstrumentItem HARMONICA = Registry.register(Registries.ITEM, Identifier.of(ID, "harmonica"), new InstrumentItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), Progressions.CHROMATIC)))
-    );
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), Progressions.CHROMATIC_MINOR))
+        .component(INSTRUMENT, new InstrumentComponent(5, 40))
+    ));
 
     public static final Item SPIRIT_ARMADILLO = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_armadillo"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), Progressions.A1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), Progressions.A1546)))
     );
 
     public static final Item SPIRIT_BUNNY = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_bunny"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), Progressions.B1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), Progressions.B1546)))
     );
 
     public static final Item SPIRIT_BAT = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_bat"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), Progressions.Bb1547)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), Progressions.Bb1547)))
     );
 
     public static final Item SPIRIT_CAT = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_cat"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.C1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.C1546)))
     );
 
     public static final Item SPIRIT_DOG = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_dog"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.D1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.D1546)))
     );
 
     public static final Item SPIRIT_CHAMELEON = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_chameleon"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new PowerKeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_GUITAR.value(), Progressions.Cm1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_GUITAR.value(), Progressions.Cm1546)))
     );
 
     @Override
