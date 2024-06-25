@@ -53,12 +53,12 @@ public class InstrumentItem extends Item {
         return hasKey(usingStack) ? usingStack.get(PowerChord.KEY) : null;
     }
 
-    private int getNotePlayTicks(ItemStack stack) {
-        return stack.contains(PowerChord.INSTRUMENT) ? stack.get(PowerChord.INSTRUMENT).notePlayTicks() : 10;
+    private int getNoteTicks(ItemStack stack) {
+        return stack.contains(PowerChord.INSTRUMENT) ? stack.get(PowerChord.INSTRUMENT).noteTicks() : 8;
     }
 
-    private int getNoteCooldownTicks(ItemStack stack) {
-        return stack.contains(PowerChord.INSTRUMENT) ? stack.get(PowerChord.INSTRUMENT).noteCooldownTicks() : 20;
+    private int getCooldownBeats(ItemStack stack) {
+        return stack.contains(PowerChord.INSTRUMENT) ? stack.get(PowerChord.INSTRUMENT).cooldownBeats() : (getNoteTicks(stack) * 4);
     }
 
     public static boolean hasState(ItemStack stack)
@@ -131,7 +131,7 @@ public class InstrumentItem extends Item {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         KeyComponent key = getKey(user, stack);
-        int noteTicks = getNotePlayTicks(stack);
+        int noteTicks = getNoteTicks(stack);
         if (key != null) {
             if (remainingUseTicks >= 2 * noteTicks) { // Release Zone
                 if (remainingUseTicks % noteTicks == 0) {
@@ -145,7 +145,8 @@ public class InstrumentItem extends Item {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (remainingUseTicks < getNotePlayTicks(stack) * 2) {
+        int noteTicks = getNoteTicks(stack);
+        if (remainingUseTicks < noteTicks * 2) {
             KeyComponent key = getKey(user, stack);
             if (key != null && user instanceof PlayerEntity player) {
                 playChord(user, key, getChordIndex(user, key, stack));
@@ -161,7 +162,7 @@ public class InstrumentItem extends Item {
                     for (LivingEntity target : targets) {
                         target.addStatusEffect(new StatusEffectInstance(effect.status()));
                     }
-                    player.getItemCooldownManager().set(stack.getItem(), key.chords().get(getChordIndex(user, key, stack)).notes().size() * getNoteCooldownTicks(stack));
+                    player.getItemCooldownManager().set(stack.getItem(), noteTicks * (1 + getCooldownBeats(stack)));
                 }
             }
         }
@@ -192,7 +193,7 @@ public class InstrumentItem extends Item {
     public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         KeyComponent key = getKey(user, stack);
         if (key != null) {
-            return (key.chords().get(getChordIndex(user, key, stack)).notes().size() + 1 /* release window */) * getNotePlayTicks(stack);
+            return (key.chords().get(getChordIndex(user, key, stack)).notes().size() + 1 /* release window */) * getNoteTicks(stack);
         }
         return 0;
     }

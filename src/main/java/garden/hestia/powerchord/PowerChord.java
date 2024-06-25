@@ -35,12 +35,17 @@ public class PowerChord implements ModInitializer {
 
     public static final InstrumentItem PAN_FLUTE = Registry.register(Registries.ITEM, Identifier.of(ID, "pan_flute"), new InstrumentItem(new Item.Settings().maxCount(1).rarity(Rarity.COMMON)
         .component(KEY, new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), Progressions.CHROMATIC))
-        .component(INSTRUMENT, new InstrumentComponent(10, 20))
+        .component(INSTRUMENT, new InstrumentComponent(8, 4))
     ));
 
     public static final InstrumentItem HARMONICA = Registry.register(Registries.ITEM, Identifier.of(ID, "harmonica"), new InstrumentItem(new Item.Settings().maxCount(1).rarity(Rarity.COMMON).component(KEY,
-            new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), Progressions.CHROMATIC_MINOR))
-        .component(INSTRUMENT, new InstrumentComponent(5, 40))
+            new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.CHROMATIC_MINOR))
+        .component(INSTRUMENT, new InstrumentComponent(4, 12))
+    ));
+
+    public static final InstrumentItem WAWA = Registry.register(Registries.ITEM, Identifier.of(ID, "wawa"), new InstrumentItem(new Item.Settings().maxCount(1).rarity(Rarity.COMMON).component(KEY,
+            new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), Progressions.CHROMATIC))
+        .component(INSTRUMENT, new InstrumentComponent(12, 0))
     ));
 
     public static final Item SPIRIT_ARMADILLO = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_armadillo"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
@@ -108,6 +113,7 @@ public class PowerChord implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register((entries -> entries.addBefore(Items.MUSIC_DISC_13,
             PAN_FLUTE,
             HARMONICA,
+            WAWA,
             SPIRIT_ARMADILLO,
             SPIRIT_ANTEATER,
             SPIRIT_BUNNY,

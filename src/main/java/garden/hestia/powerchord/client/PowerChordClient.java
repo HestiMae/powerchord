@@ -22,7 +22,8 @@ import java.util.Map;
 public class PowerChordClient implements ClientModInitializer {
     public static final Map<Item, Identifier> FLAT_MODELS = Map.of(
         PowerChord.HARMONICA, Identifier.of("powerchord", "item/harmonica_flat"),
-        PowerChord.PAN_FLUTE, Identifier.of("powerchord", "item/pan_flute_flat")
+        PowerChord.PAN_FLUTE, Identifier.of("powerchord", "item/pan_flute_flat"),
+        PowerChord.WAWA, Identifier.of("powerchord", "item/wawa_flat")
     );
 
     @Override

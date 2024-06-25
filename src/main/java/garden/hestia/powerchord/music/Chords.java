@@ -47,7 +47,7 @@ public class Chords {
     public static final PowerableChord Bm = new PowerableChord(List.of(Notes.B, Notes.D, Notes.Fs2), Text.literal("Bm"), new AoeEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40), 10, false));
     public static final PowerableChord Cm = new PowerableChord(List.of(Notes.C, Notes.Ds, Notes.G2), Text.literal("Cm"), new AoeEffect(new StatusEffectInstance(StatusEffects.POISON, 40), 10, false));
     public static final PowerableChord Csm = new PowerableChord(List.of(Notes.Cs, Notes.E, Notes.Gs2), Text.literal("C#m"), new AoeEffect(new StatusEffectInstance(StatusEffects.WITHER, 20), 10, false));
-    public static final PowerableChord Dm = new PowerableChord(List.of(Notes.D, Notes.F2, Notes.A2), Text.literal("Dm"), new AoeEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 80), 10, false));
+    public static final PowerableChord Dm = new PowerableChord(List.of(Notes.D, Notes.F, Notes.A2), Text.literal("Dm"), new AoeEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 80), 10, false));
     public static final PowerableChord Dsm = new PowerableChord(List.of(Notes.Ds, Notes.Fs2, Notes.As2), Text.literal("D#m"), new AoeEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 1), 10, false));
     public static final PowerableChord Em = new PowerableChord(List.of(Notes.E, Notes.G2, Notes.B2), Text.literal("Em"), new AoeEffect(new StatusEffectInstance(StatusEffects.GLOWING, 80), 10, false));
     public static final PowerableChord Fm = new PowerableChord(List.of(Notes.F, Notes.Gs2, Notes.C2), Text.literal("Fm"), new AoeEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 60), 10, false));
