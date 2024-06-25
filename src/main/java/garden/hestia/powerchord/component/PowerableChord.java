@@ -2,8 +2,10 @@ package garden.hestia.powerchord.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.dynamic.Codecs;
 
 import java.util.List;
@@ -17,5 +19,11 @@ public record PowerableChord(List<Integer> notes, Text name, AoeEffect effect) {
 
     public int root() {
         return notes.get(0);
+    }
+
+    public Text toText(boolean withEffect) {
+        MutableText nameText = name.copy().formatted(effect.friendly() ? Formatting.GREEN : Formatting.RED);
+        MutableText effectText = Text.translatable(effect.status().getTranslationKey()).append(Text.literal(effect().status().getAmplifier() == 0 ? "" : " ")).append(Text.translatable("potion.potency." + effect().status().getAmplifier())).withColor(effect().status().getEffectType().value().getColor());
+        return withEffect ? Text.literal("").append(nameText).append(" (").append(effectText).append(")") : nameText;
     }
 }

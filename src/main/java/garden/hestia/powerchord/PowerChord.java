@@ -40,7 +40,7 @@ public class PowerChord implements ModInitializer {
 
     public static final InstrumentItem HARMONICA = Registry.register(Registries.ITEM, Identifier.of(ID, "harmonica"), new InstrumentItem(new Item.Settings().maxCount(1).rarity(Rarity.COMMON).component(KEY,
             new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.CHROMATIC_MINOR))
-        .component(INSTRUMENT, new InstrumentComponent(4, 12))
+        .component(INSTRUMENT, new InstrumentComponent(5, 12))
     ));
 
     public static final InstrumentItem WAWA = Registry.register(Registries.ITEM, Identifier.of(ID, "wawa"), new InstrumentItem(new Item.Settings().maxCount(1).rarity(Rarity.COMMON).component(KEY,

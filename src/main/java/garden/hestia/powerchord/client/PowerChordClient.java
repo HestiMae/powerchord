@@ -12,9 +12,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
@@ -39,9 +37,7 @@ public class PowerChordClient implements ClientModInitializer {
         ItemStack instrumentItemStack = InstrumentItem.getPlayableInstrument(player);
         if (key == null || instrumentItemStack == null) return;
         PowerableChord chord = key.chords().get(InstrumentItem.getChordIndex(player, key, instrumentItemStack));
-        StatusEffect effect = chord.effect().status().getEffectType().value();
-        Text chordName = chord.name();
-        drawContext.drawText(MinecraftClient.getInstance().textRenderer, (player.isSneaking() && InstrumentItem.isMagical(player)) ? Text.literal("").append(chordName).append("   (").append(Text.translatable(effect.getTranslationKey()).withColor(effect.getColor())).append(")") : chordName, drawContext.getScaledWindowWidth() / 2 + 8, drawContext.getScaledWindowHeight() / 2 - 4, 0xFFFFFFFF, true);
+        drawContext.drawText(MinecraftClient.getInstance().textRenderer, chord.toText((player.isSneaking() && InstrumentItem.isMagical(player))), drawContext.getScaledWindowWidth() / 2 + 8, drawContext.getScaledWindowHeight() / 2 - 4, 0xFFFFFFFF, true);
     }
 
 }
