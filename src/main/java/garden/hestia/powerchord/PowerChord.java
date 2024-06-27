@@ -49,35 +49,35 @@ public class PowerChord implements ModInitializer {
     ));
 
     public static final Item SPIRIT_ARMADILLO = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_armadillo"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), Progressions.A1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), Progressions.A1A546)))
     );
 
     public static final Item SPIRIT_BUNNY = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_bunny"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), Progressions.B1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), Progressions.B1A546)))
     );
 
     public static final Item SPIRIT_BAT = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_bat"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), Progressions.Bb1547)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), Progressions.Bb1A547)))
     );
 
     public static final Item SPIRIT_CAT = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_cat"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.C1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.C1A546)))
     );
 
     public static final Item SPIRIT_DOG = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_dog"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.D1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), Progressions.D1A546)))
     );
 
     public static final Item SPIRIT_ECHIDNA = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_echidna"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), Progressions.E1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), Progressions.E1A546)))
     );
 
     public static final Item SPIRIT_FROG = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_frog"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), Progressions.F1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), Progressions.F1A546)))
     );
 
     public static final Item SPIRIT_GOPHER = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_gopher"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,
-        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), Progressions.G1546)))
+        new KeyComponent(SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), Progressions.G1A546)))
     );
 
     public static final Item SPIRIT_ANTEATER = Registry.register(Registries.ITEM, Identifier.of(ID, "spirit_anteater"), new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).component(KEY,

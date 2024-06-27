@@ -17,6 +17,10 @@ public record PowerableChord(List<Integer> notes, Text name, AoeEffect effect) {
         AoeEffect.CODEC.fieldOf("effect").forGetter(PowerableChord::effect)
     ).apply(instance, PowerableChord::new));
 
+    public PowerableChord named(Text name) {
+        return new PowerableChord(notes, name, effect);
+    }
+
     public int root(boolean reversed) {
         return notes.get(reversed ? notes.size() - 1 : 0);
     }
