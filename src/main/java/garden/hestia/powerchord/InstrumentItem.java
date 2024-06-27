@@ -1,8 +1,10 @@
 package garden.hestia.powerchord;
 
+import com.google.common.collect.Lists;
 import garden.hestia.powerchord.component.AoeEffect;
 import garden.hestia.powerchord.component.InstrumentStateComponent;
 import garden.hestia.powerchord.component.KeyComponent;
+import garden.hestia.powerchord.component.PowerableChord;
 import net.minecraft.block.NoteBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -71,9 +73,9 @@ public class InstrumentItem extends Item {
         return hasState(stack) ? stack.get(PowerChord.STATE) : null;
     }
 
-    public static void setState(ItemStack stack, int index)
+    public static void setState(ItemStack stack, int index, boolean reversed)
     {
-        stack.set(PowerChord.STATE, new InstrumentStateComponent(index));
+        stack.set(PowerChord.STATE, new InstrumentStateComponent(index, reversed));
     }
 
     public static SoundEvent getSoundEvent(KeyComponent key) {
@@ -85,14 +87,19 @@ public class InstrumentItem extends Item {
         return key == null ? 0 : (int) Math.floor((90.0f - user.getPitch()) * key.chords().size() / 180.05f);
     }
 
-    public static void playRoot(LivingEntity user, KeyComponent key, int chordIndex) {
-        user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(chordIndex).root()));
+    private static boolean getReversed(LivingEntity user, ItemStack instrumentStack) {
+        if (hasState(instrumentStack)) return getState(instrumentStack).reversed();
+        return user.isSneaking();
     }
 
-    public static void playChord(LivingEntity user, KeyComponent key, int chordIndex) {
-        List<Integer> notes = key.chords().get(chordIndex).notes();
+    public static void playRoot(LivingEntity user, KeyComponent key, int chordIndex, boolean reversed) {
+        user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(chordIndex).root(reversed)));
+    }
+
+    public static void playChord(LivingEntity user, KeyComponent key, int chordIndex, boolean reversed) {
+        List<Integer> notes = reversed ? Lists.reverse(key.chords().get(chordIndex).notes()) : key.chords().get(chordIndex).notes();
         for (int i = 0; i < notes.size(); i++) {
-            user.playSound(getSoundEvent(key), i == 0 ? 0.5f : i == notes.size() - 1 ? 0.7f : 0.3f, NoteBlock.getNotePitch(key.chords().get(chordIndex).notes().get(i)));
+            user.playSound(getSoundEvent(key), i == 0 ? 0.4f : i == notes.size() - 1 ? 0.7f : 0.3f, NoteBlock.getNotePitch(notes.get(i)));
         }
     }
 
@@ -109,7 +116,7 @@ public class InstrumentItem extends Item {
         Hand swingHand = handBlockingSwing(user, hand);
         if (swingHand !=  null) {
             KeyComponent key = getKey(user, user.getStackInHand(hand));
-            playChord(user, key, getChordIndex(user, key, user.getStackInHand(hand)));
+            playChord(user, key, getChordIndex(user, key, user.getStackInHand(hand)), getReversed(user, user.getStackInHand(hand)));
             return true;
         }
         return false;
@@ -120,8 +127,8 @@ public class InstrumentItem extends Item {
         ItemStack stackInHand = user.getStackInHand(hand);
         KeyComponent key = getKey(user, stackInHand);
         if (key != null) {
-            setState(stackInHand, getChordIndex(user, key, stackInHand));
-            playRoot(user, key, getChordIndex(user, key, stackInHand));
+            setState(stackInHand, getChordIndex(user, key, stackInHand), getReversed(user, stackInHand));
+            playRoot(user, key, getChordIndex(user, key, stackInHand), getReversed(user, stackInHand));
             user.setCurrentHand(hand);
             return TypedActionResult.pass(stackInHand);
         }
@@ -135,8 +142,10 @@ public class InstrumentItem extends Item {
         if (key != null) {
             if (remainingUseTicks >= 2 * noteTicks) { // Release Zone
                 if (remainingUseTicks % noteTicks == 0) {
+                    PowerableChord chord = key.chords().get(getChordIndex(user, key, stack));
                     int noteIndex = (getMaxUseTime(stack, user) - remainingUseTicks) / noteTicks;
-                    user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(key.chords().get(getChordIndex(user, key, stack)).notes().get(noteIndex)));
+                    int actualNoteIndex = getReversed(user, stack) ? chord.notes().size() - noteIndex - 1 : noteIndex;
+                    user.playSound(getSoundEvent(key), 0.5f, NoteBlock.getNotePitch(chord.notes().get(actualNoteIndex)));
                 }
             }
         }
@@ -149,7 +158,7 @@ public class InstrumentItem extends Item {
         if (remainingUseTicks < noteTicks * 2) {
             KeyComponent key = getKey(user, stack);
             if (key != null && user instanceof PlayerEntity player) {
-                playChord(user, key, getChordIndex(user, key, stack));
+                playChord(user, key, getChordIndex(user, key, stack), getReversed(user, stack));
                 if (isMagical(user)) {
                     AoeEffect effect = key.chords().get(getChordIndex(user, key, stack)).effect();
                     List<LivingEntity> targets;
