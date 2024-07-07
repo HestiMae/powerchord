@@ -4,12 +4,12 @@
   "package": "garden.hestia.powerchord.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "MixinItemStack",
-    "MixinLivingEntity"
+    "MixinItemStack"
   ],
   "client": [
     "client.MixinGameRenderer",
-    "client.MixinItemRenderer"
+    "client.MixinItemRenderer",
+    "client.MixinMinecraftClient"
   ],
   "injectors": {
     "defaultRequire": 1

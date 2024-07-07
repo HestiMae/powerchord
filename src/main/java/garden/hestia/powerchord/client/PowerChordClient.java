@@ -1,5 +1,6 @@
 package garden.hestia.powerchord.client;
 
+import garden.hestia.powerchord.FreePlayChordPacket;
 import garden.hestia.powerchord.InstrumentItem;
 import garden.hestia.powerchord.PowerChord;
 import garden.hestia.powerchord.component.KeyComponent;
@@ -7,6 +8,7 @@ import garden.hestia.powerchord.component.PowerableChord;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -26,6 +28,7 @@ public class PowerChordClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        PayloadTypeRegistry.playC2S().register(FreePlayChordPacket.ID, FreePlayChordPacket.CODEC);
         ModelLoadingPlugin.register(pluginContext -> pluginContext.addModels(FLAT_MODELS.values()));
         HudRenderCallback.EVENT.register(PowerChordClient::render);
     }
