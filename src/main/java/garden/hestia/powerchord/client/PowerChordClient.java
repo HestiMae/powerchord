@@ -36,7 +36,9 @@ public class PowerChordClient implements ClientModInitializer {
         KeyComponent key = InstrumentItem.getPlayableKey(player);
         ItemStack instrumentItemStack = InstrumentItem.getPlayableInstrument(player);
         if (key == null || instrumentItemStack == null) return;
-        PowerableChord chord = key.chords().get(InstrumentItem.getChordIndex(player, key, instrumentItemStack));
+        int chordIndex = InstrumentItem.getChordIndex(player, key, instrumentItemStack);
+        if (chordIndex >= key.chords().size()) return;
+        PowerableChord chord = key.chords().get(chordIndex);
         drawContext.drawText(MinecraftClient.getInstance().textRenderer, chord.toText((player.isSneaking() && InstrumentItem.isMagical(player))), drawContext.getScaledWindowWidth() / 2 + 8, drawContext.getScaledWindowHeight() / 2 - 4, 0xFFFFFFFF, true);
     }
 
