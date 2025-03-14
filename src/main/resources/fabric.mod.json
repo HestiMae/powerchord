@@ -1,24 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "powerchord",
+  "id": "${modId}",
   "version": "${version}",
-  "name": "PowerChord",
-  "description": "A component-driven RPG instrument system for hunting-horn-likes.",
+  "name": "${modName}",
+  "description": "${modDescription}",
   "authors": [
-    "Garden system",
-    "Sisby folk"
+    "${authors}"
   ],
   "contributors": [
-    "lumiscosity",
-    "hama"
+    "${contributors}"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/powerchord",
-    "issues": "https://github.com/hestimae/powerchord/issues",
-    "sources": "https://github.com/hestimae/powerchord"
+    "homepage": "${homepage}",
+    "issues": "${issues}",
+    "sources": "${sources}"
   },
-  "icon": "assets/powerchord/icon.png",
-  "license": "LGPL-3.0-only",
+  "license": "${license}",
+  "icon": "assets/${modId}/icon.png",
+  "depends": {
+    "minecraft": ">=${mc}",
+    "fabricloader": ">=${fl}",
+    "fabric-api": ">=${fapi}"
+  },
   "entrypoints": {
     "main": [
       "garden.hestia.powerchord.PowerChord"
@@ -26,13 +29,5 @@
     "client": [
       "garden.hestia.powerchord.client.PowerChordClient"
     ]
-  },
-  "depends": {
-    "minecraft": ">=${mc}",
-    "fabricloader": ">=${fl}",
-    "fabric-api": ">=${fapi}"
-  },
-  "mixins": [
-    "powerchord.mixins.json"
-  ]
+  }
 }
